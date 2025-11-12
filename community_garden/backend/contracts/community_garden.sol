@@ -16,7 +16,7 @@ contract c_garden {
         address primary;
         address friend;
     }
-    mapping(uint8 => plot) public plots;
+    mapping(uint8 => Plot) public plots;
 
     //Fee and gate access/ how many people allowed per plot
     uint256 public monthlyFee;
@@ -28,7 +28,7 @@ contract c_garden {
     event MonthPaid(address indexed account, uint256 newPaidUntil);
     event Withdrawn(address indexed to, uint256 amount);
 
-    event MonthlyFeeChanged(uint256 oldFee, uint256 newFee);
+    //event MonthlyFeeChanged(uint256 oldFee, uint256 newFee); ommitted for now, there is no function yet
 
     event PlotAssigned(uint8 indexed slot, address indexed primary);
     event PlotRevoked(uint8 indexed slot, address indexed previousPrimary);
@@ -68,7 +68,7 @@ contract c_garden {
         return paidUntil[user] >= block.timestamp;
     }
 
-    function getKeyCount(addres user) external view returns (uint8) {
+    function getKeyCount(address user) external view returns (uint8) {
         require(hasGateAccess(user), "no active access");
         return keys_per_memeber;
     }
@@ -116,8 +116,8 @@ contract c_garden {
     }
     //payments
     function payForMonth() external payable {
-        require(monthlyFeeWei > 0, "fee unset");
-        require(msg.value == monthlyFeeWei, "wrong amount");
+        require(monthlyFee > 0, "fee unset");
+        require(msg.value == monthlyFee, "wrong amount");
         uint256 start = paidUntil[msg.sender] > block.timestamp
             ? paidUntil[msg.sender]
             : block.timestamp;
@@ -134,6 +134,10 @@ contract c_garden {
     //internals
     function _requireValidSlot(uint8 s) internal pure {
         require(s >= 1 && s <= max_slots, "bad slot");
+    }
+
+    receive() external payable {
+        revert("send via payForMonth");
     }
 
 }

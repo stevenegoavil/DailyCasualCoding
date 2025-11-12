@@ -1,0 +1,34 @@
+import { expect } from "chai";
+import {network} from "hardhat";
+
+const { ethers } = await network.connect();
+
+describe("community_garden.sol testing contract functionality", function () {
+  let connect_community_garden;
+  let sim_jim; // this might not be useful if slim jim is just another regular primary, maybe for the sake of this test code we will make him have special abilities, but will be implimented at the end.
+  let admin;
+  let friend;
+  let primaryslotbuyer;
+  let denied_user;
+
+  beforeEach(async function() {
+    const testing_community_garden = await ethers.getContractFactory("c_garden", admin);
+    [sim_jim, admin, friend, primaryslotbuyer, denied_user] = await ethers.getSigners();
+
+    const initialSlots = [11];
+    const primary = [primaryslotbuyer.address, sim_jim.address]; //sim_jim is in here for now
+    const friends = [friend.address, ethers.ZeroAddress];
+    const monthlyFee = ethers.parseEther("0.1");
+
+    //connect_community_garden = await testing_community_garden.deploy(initialSlots, primary, friends, monthlyFee);
+    connect_community_garden = await testing_community_garden.connect(initialSlots, primary, friends, monthlyFee).deploy();
+    await connect_community_garden.waitForDeployment();
+  })
+
+  it("deploys and sets owner to admin", async()=>{
+    expect(await connect_community_garden.owner()).to.equal(await admin.getAddress());
+
+  });
+
+  
+});
