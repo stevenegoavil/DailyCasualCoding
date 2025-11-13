@@ -16,13 +16,13 @@ describe("community_garden.sol testing contract functionality", function () {
     const testing_community_garden = await ethers.getContractFactory("c_garden", admin);
     
 
-    const initialSlots = [1, 2];
+    const initialSlots = [1, 2, 3, 4];
     const primary = [primaryslotbuyer.address, sim_jim.address]; //sim_jim is in here for now
     const friends = [friend.address, ethers.ZeroAddress];
     const monthlyFee = ethers.parseEther("0.1");
 
     //connect_community_garden = await testing_community_garden.deploy(initialSlots, primary, friends, monthlyFee);
-    connect_community_garden = await testing_community_garden.deploy(initialSlots, primary, friends, monthlyFee);
+    connect_community_garden = await testing_community_garden.connect(initialSlots, primary, friends, monthlyFee).deploy();
     await connect_community_garden.waitForDeployment();
   })
 
@@ -33,3 +33,8 @@ describe("community_garden.sol testing contract functionality", function () {
 
   
 });
+
+
+there was an issue with .connect( ).deploy();
+
+it was just supposed to be .deploy()
