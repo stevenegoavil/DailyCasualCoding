@@ -23,7 +23,7 @@ contract c_garden {
     mapping(address => uint256) public paidUntil;
     uint8 public constant keys_per_memeber = 2;
 
-    //events
+    //events these are used in the test.js to call upon so you can match up names
     event OwnerChanged(address indexed oldOwner, address indexed newOwner);
     event MonthPaid(address indexed account, uint256 newPaidUntil);
     event Withdrawn(address indexed to, uint256 amount);
